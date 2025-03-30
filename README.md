@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mydnic/volet-feature-board/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mydnic/volet-feature-board/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/mydnic/volet-feature-board.svg?style=flat-square)](https://packagist.org/packages/mydnic/volet-feature-board)
 
-A Feature board plugin for Volet - Allow users to suggest and vote for features
+A Feature board plugin for [Volet](https://github.com/mydnic/volet) - Allow users to suggest and vote for features
 
 ## Installation
 
