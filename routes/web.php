@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mydnic\VoletFeatureBoard\Http\Controllers\CommentController;
 use Mydnic\VoletFeatureBoard\Http\Controllers\FeatureController;
 use Mydnic\VoletFeatureBoard\Http\Controllers\VoteController;
-use Mydnic\VoletFeatureBoard\Http\Controllers\CommentController;
 
 Route::prefix(config('volet-feature-board.routes.prefix'))
     ->middleware(config('volet-feature-board.routes.middleware'))

@@ -10,11 +10,11 @@ trait HasAuthor
     protected function getAuthorId(): string
     {
         if (Auth::check()) {
-            return 'user_' . Auth::id();
+            return 'user_'.Auth::id();
         }
 
         if (! Session::has('guest_id')) {
-            Session::put('guest_id', 'guest_' . str_replace('-', '', (string) \Illuminate\Support\Str::uuid()));
+            Session::put('guest_id', 'guest_'.str_replace('-', '', (string) \Illuminate\Support\Str::uuid()));
         }
 
         return Session::get('guest_id');

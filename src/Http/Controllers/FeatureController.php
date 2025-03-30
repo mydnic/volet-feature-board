@@ -5,8 +5,6 @@ namespace Mydnic\VoletFeatureBoard\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Enum;
 use Mydnic\Volet\Features\FeatureManager;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Models\Feature;
@@ -43,7 +41,7 @@ class FeatureController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|string|in:' . implode(',', $categories),
+            'category' => 'required|string|in:'.implode(',', $categories),
         ]);
 
         $feature = Feature::create([
@@ -60,6 +58,7 @@ class FeatureController extends Controller
     public function show(Feature $feature): JsonResponse
     {
         $feature->load(['votes', 'comments']);
+
         return response()->json($feature);
     }
 }

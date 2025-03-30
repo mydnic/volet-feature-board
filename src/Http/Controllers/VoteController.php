@@ -4,7 +4,6 @@ namespace Mydnic\VoletFeatureBoard\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Mydnic\VoletFeatureBoard\Models\Feature;
 use Mydnic\VoletFeatureBoard\Models\Vote;
 use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
