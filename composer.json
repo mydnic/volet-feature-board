@@ -24,13 +24,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Mydnic\\VoletFeatureBoard\\Tests\\": "tests/"
+            "Mydnic\\VoletFeatureboard\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Mydnic\\VoletFeatureBoard\\FeatureBoardServiceProvider"
+                "Mydnic\\VoletFeatureBoard\\VoletFeatureBoardServiceProvider"
             ]
         }
     },

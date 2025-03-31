@@ -1,262 +1,253 @@
 <template>
-  <div class="volet-feature-board">
-    <div class="volet-feature-board-header">
-      <h2 class="volet-feature-board-title">Feature Requests</h2>
-      <button @click="showNewFeatureForm = true" class="volet-feature-board-button">
-        Suggest Feature
-      </button>
-    </div>
-
-    <div v-if="showNewFeatureForm" class="volet-feature-board-form">
-      <input v-model="newFeature.title" placeholder="Feature title" class="volet-feature-board-input" />
-      <textarea v-model="newFeature.description" placeholder="Describe your feature request..." class="volet-feature-board-textarea"></textarea>
-      <input v-model="newFeature.category" placeholder="Category" class="volet-feature-board-input" />
-      <div class="volet-feature-board-form-actions">
-        <button @click="submitFeature" class="volet-feature-board-button">Submit</button>
-        <button @click="showNewFeatureForm = false" class="volet-feature-board-button-secondary">Cancel</button>
-      </div>
-    </div>
-
-    <div v-for="(features, category) in groupedFeatures" :key="category" class="volet-feature-board-category">
-      <h3 class="volet-feature-board-category-title">{{ category }}</h3>
-      <div class="volet-feature-board-features">
-        <div v-for="feature in features" :key="feature.id" class="volet-feature-board-feature">
-          <div class="volet-feature-board-feature-header">
-            <h4 class="volet-feature-board-feature-title">{{ feature.title }}</h4>
-            <span :class="['volet-feature-board-feature-status', feature.status]">{{ feature.status }}</span>
-          </div>
-          <p class="volet-feature-board-feature-description">{{ feature.description }}</p>
-          <div class="volet-feature-board-feature-actions">
-            <button @click="toggleVote(feature)" class="volet-feature-board-vote-button">
-              👍 {{ feature.votes_count }}
+    <div class="volet-feature-board">
+        <div class="volet-feature-board-categories">
+            <button 
+                v-for="category in categories" 
+                :key="category.slug"
+                @click="selectCategory(category)"
+                :class="[
+                    'volet-feature-board-category-button',
+                    { active: selectedCategory?.slug === category.slug }
+                ]"
+            >
+                {{ category.name }}
             </button>
-            <button @click="feature.showComments = !feature.showComments" class="volet-feature-board-button-secondary">
-              💬 {{ feature.comments.length }}
-            </button>
-          </div>
-          <div v-if="feature.showComments" class="volet-feature-board-comments">
-            <div v-for="comment in feature.comments" :key="comment.id" class="volet-feature-board-comment">
-              <strong>{{ comment.user.name }}</strong>
-              <p>{{ comment.content }}</p>
-            </div>
-            <div class="volet-feature-board-comment-form">
-              <textarea v-model="feature.newComment" placeholder="Add a comment..." class="volet-feature-board-textarea"></textarea>
-              <button @click="addComment(feature)" class="volet-feature-board-button">Comment</button>
-            </div>
-          </div>
         </div>
-      </div>
+
+        <div v-if="showForm" class="volet-feature-board-form">
+            <form @submit.prevent="submitFeature">
+                <div class="volet-feature-board-form-group">
+                    <label class="volet-feature-board-label">{{ labels.title }}</label>
+                    <input 
+                        type="text" 
+                        v-model="form.title" 
+                        class="volet-feature-board-input"
+                    >
+                </div>
+                <div class="volet-feature-board-form-group">
+                    <label class="volet-feature-board-label">{{ labels.description }}</label>
+                    <textarea 
+                        v-model="form.description" 
+                        rows="3"
+                        class="volet-feature-board-textarea"
+                    ></textarea>
+                </div>
+                <div class="volet-feature-board-buttons">
+                    <button 
+                        type="button"
+                        @click="showForm = false"
+                        class="volet-feature-board-button volet-feature-board-button-secondary"
+                    >
+                        {{ labels.cancel }}
+                    </button>
+                    <button 
+                        type="submit"
+                        class="volet-feature-board-button volet-feature-board-button-primary"
+                    >
+                        {{ labels.submit }}
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div v-else class="volet-feature-board-form-group">
+            <button 
+                @click="showForm = true"
+                class="volet-feature-board-button volet-feature-board-button-primary"
+            >
+                {{ labels.suggestFeature }}
+            </button>
+        </div>
+
+        <div v-if="selectedCategory" class="volet-feature-board-features">
+            <div v-for="feature in filteredFeatures" :key="feature.id" class="volet-feature-board-feature">
+                <div class="volet-feature-board-feature-header">
+                    <h3 class="volet-feature-board-feature-title">{{ feature.title }}</h3>
+                    <p class="volet-feature-board-feature-description">{{ feature.description }}</p>
+                    <div class="volet-feature-board-feature-actions">
+                        <button 
+                            @click="toggleVote(feature)"
+                            :class="[
+                                'volet-feature-board-vote-button',
+                                { voted: feature.hasVoted }
+                            ]"
+                        >
+                            <span>{{ feature.votes_count }} {{ labels.votes }}</span>
+                        </button>
+                        <button 
+                            @click="feature.showComments = !feature.showComments"
+                            class="volet-feature-board-button volet-feature-board-button-secondary"
+                        >
+                            <span>{{ feature.comments?.length || 0 }} {{ labels.comments }}</span>
+                        </button>
+                        <span 
+                            :class="[
+                                'volet-feature-board-status',
+                                `volet-feature-board-status-${feature.status}`
+                            ]"
+                        >
+                            {{ feature.status }}
+                        </span>
+                    </div>
+                </div>
+
+                <div v-if="feature.showComments" class="volet-feature-board-comments">
+                    <div v-for="comment in feature.comments" :key="comment.id" class="volet-feature-board-comment">
+                        <div class="volet-feature-board-comment-author">{{ comment.author_name }}</div>
+                        <p class="volet-feature-board-comment-content">{{ comment.content }}</p>
+                    </div>
+
+                    <form @submit.prevent="submitComment(feature)" class="volet-feature-board-comment-form">
+                        <input 
+                            type="text" 
+                            v-model="commentForm[feature.id]" 
+                            :placeholder="labels.addComment"
+                            class="volet-feature-board-input"
+                        >
+                        <button 
+                            type="submit"
+                            class="volet-feature-board-button volet-feature-board-button-primary"
+                        >
+                            {{ labels.post }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+<script>
+export default {
+    props: {
+        categories: {
+            type: Array,
+            required: true
+        },
+        routes: {
+            type: Object,
+            required: true
+        },
+        labels: {
+            type: Object,
+            required: true
+        }
+    },
 
-const showNewFeatureForm = ref(false)
-const groupedFeatures = ref({})
-const newFeature = ref({
-  title: '',
-  description: '',
-  category: ''
-})
+    data() {
+        return {
+            features: [],
+            selectedCategory: null,
+            showForm: false,
+            form: {
+                title: '',
+                description: '',
+                category: ''
+            },
+            commentForm: {},
+            statusClasses: {
+                pending: 'volet-feature-board-status-pending',
+                approved: 'volet-feature-board-status-approved',
+                rejected: 'volet-feature-board-status-rejected',
+                completed: 'volet-feature-board-status-completed'
+            }
+        }
+    },
 
-const fetchFeatures = async () => {
-  const response = await axios.get('/feature-board/features')
-  groupedFeatures.value = response.data
+    computed: {
+        filteredFeatures() {
+            return this.selectedCategory
+                ? this.features[this.selectedCategory.slug] || []
+                : []
+        }
+    },
+
+    async created() {
+        this.selectedCategory = this.categories[0]
+        await this.loadFeatures()
+    },
+
+    methods: {
+        async loadFeatures() {
+            try {
+                const response = await fetch(this.routes.index)
+                if (!response.ok) throw new Error('Network response was not ok')
+                this.features = await response.json()
+            } catch (error) {
+                console.error('Error loading features:', error)
+            }
+        },
+
+        selectCategory(category) {
+            this.selectedCategory = category
+        },
+
+        async submitFeature() {
+            try {
+                const response = await fetch(this.routes.store, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...this.form,
+                        category: this.selectedCategory.slug
+                    })
+                })
+
+                if (!response.ok) throw new Error('Network response was not ok')
+                
+                await this.loadFeatures()
+                this.showForm = false
+                this.form.title = ''
+                this.form.description = ''
+            } catch (error) {
+                console.error('Error submitting feature:', error)
+            }
+        },
+
+        async toggleVote(feature) {
+            try {
+                const response = await fetch(this.routes.vote.replace('{id}', feature.id), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                if (!response.ok) throw new Error('Network response was not ok')
+                const data = await response.json()
+                
+                feature.votes_count = data.votes_count
+                feature.hasVoted = data.action === 'added'
+            } catch (error) {
+                console.error('Error toggling vote:', error)
+            }
+        },
+
+        async submitComment(feature) {
+            if (!this.commentForm[feature.id]) return
+
+            try {
+                const response = await fetch(this.routes.comment.replace('{id}', feature.id), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: this.commentForm[feature.id]
+                    })
+                })
+
+                if (!response.ok) throw new Error('Network response was not ok')
+                const comment = await response.json()
+                
+                if (!feature.comments) feature.comments = []
+                feature.comments.push(comment)
+                this.commentForm[feature.id] = ''
+            } catch (error) {
+                console.error('Error submitting comment:', error)
+            }
+        }
+    }
 }
-
-const submitFeature = async () => {
-  await axios.post('/feature-board/features', newFeature.value)
-  newFeature.value = { title: '', description: '', category: '' }
-  showNewFeatureForm.value = false
-  await fetchFeatures()
-}
-
-const toggleVote = async (feature) => {
-  const response = await axios.post(`/feature-board/features/${feature.id}/vote`)
-  feature.votes_count = response.data.votes_count
-}
-
-const addComment = async (feature) => {
-  const response = await axios.post(`/feature-board/features/${feature.id}/comments`, {
-    content: feature.newComment
-  })
-  feature.comments.push(response.data)
-  feature.newComment = ''
-}
-
-onMounted(() => {
-  fetchFeatures()
-})
-</script>
-
-<style>
-.volet-feature-board {
-  padding: var(--volet-spacing);
-  color: var(--volet-text);
-}
-
-.volet-feature-board-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--volet-spacing);
-}
-
-.volet-feature-board-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.volet-feature-board-button {
-  background-color: var(--volet-primary);
-  color: var(--volet-background);
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.volet-feature-board-button:hover {
-  background-color: var(--volet-primary-hover);
-}
-
-.volet-feature-board-button-secondary {
-  background-color: transparent;
-  color: var(--volet-text);
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--volet-border);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.volet-feature-board-button-secondary:hover {
-  background-color: var(--volet-border);
-}
-
-.volet-feature-board-form {
-  margin-bottom: var(--volet-spacing);
-  padding: var(--volet-spacing);
-  border: 1px solid var(--volet-border);
-  border-radius: 0.5rem;
-}
-
-.volet-feature-board-input,
-.volet-feature-board-textarea {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid var(--volet-border);
-  border-radius: 0.375rem;
-  background-color: var(--volet-background);
-  color: var(--volet-text);
-}
-
-.volet-feature-board-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.volet-feature-board-form-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-.volet-feature-board-category {
-  margin-bottom: var(--volet-spacing);
-}
-
-.volet-feature-board-category-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.volet-feature-board-feature {
-  padding: var(--volet-spacing);
-  border: 1px solid var(--volet-border);
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.volet-feature-board-feature-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.volet-feature-board-feature-title {
-  margin: 0;
-  font-weight: 600;
-}
-
-.volet-feature-board-feature-status {
-  font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-}
-
-.volet-feature-board-feature-status.pending {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.volet-feature-board-feature-status.approved {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.volet-feature-board-feature-status.rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.volet-feature-board-feature-status.completed {
-  background-color: #e0e7ff;
-  color: #3730a3;
-}
-
-.volet-feature-board-feature-description {
-  margin: 0.5rem 0;
-}
-
-.volet-feature-board-feature-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.volet-feature-board-comments {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--volet-border);
-}
-
-.volet-feature-board-comment {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: var(--volet-background-alt);
-  border-radius: 0.375rem;
-}
-
-.volet-feature-board-comment strong {
-  font-weight: 600;
-}
-
-.volet-feature-board-comment p {
-  margin: 0.25rem 0 0;
-}
-
-.volet-feature-board-comment-form {
-  margin-top: 1rem;
-}
-</style>
-<script setup lang="ts">
 </script>
