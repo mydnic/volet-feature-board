@@ -1,8 +1,8 @@
 <template>
     <div class="volet-feature-board">
         <div class="volet-feature-board-categories">
-            <button 
-                v-for="category in categories" 
+            <button
+                v-for="category in categories"
                 :key="category.slug"
                 @click="selectCategory(category)"
                 :class="[
@@ -18,29 +18,39 @@
             <form @submit.prevent="submitFeature">
                 <div class="volet-feature-board-form-group">
                     <label class="volet-feature-board-label">{{ labels.title }}</label>
-                    <input 
-                        type="text" 
-                        v-model="form.title" 
+                    <input
+                        type="text"
+                        v-model="form.title"
+                        @input="onTitleInput"
                         class="volet-feature-board-input"
+                        :class="{ 'has-error': formErrors.title }"
                     >
+                    <div v-if="formErrors.title" class="volet-feature-board-error">
+                        {{ formErrors.title[0] }}
+                    </div>
                 </div>
                 <div class="volet-feature-board-form-group">
                     <label class="volet-feature-board-label">{{ labels.description }}</label>
-                    <textarea 
-                        v-model="form.description" 
+                    <textarea
+                        v-model="form.description"
+                        @input="onDescriptionInput"
                         rows="3"
                         class="volet-feature-board-textarea"
+                        :class="{ 'has-error': formErrors.description }"
                     ></textarea>
+                    <div v-if="formErrors.description" class="volet-feature-board-error">
+                        {{ formErrors.description[0] }}
+                    </div>
                 </div>
                 <div class="volet-feature-board-buttons">
-                    <button 
+                    <button
                         type="button"
                         @click="showForm = false"
                         class="volet-feature-board-button volet-feature-board-button-secondary"
                     >
                         {{ labels.cancel }}
                     </button>
-                    <button 
+                    <button
                         type="submit"
                         class="volet-feature-board-button volet-feature-board-button-primary"
                     >
@@ -50,7 +60,7 @@
             </form>
         </div>
         <div v-else class="volet-feature-board-form-group">
-            <button 
+            <button
                 @click="showForm = true"
                 class="volet-feature-board-button volet-feature-board-button-primary"
             >
@@ -64,7 +74,7 @@
                     <h3 class="volet-feature-board-feature-title">{{ feature.title }}</h3>
                     <p class="volet-feature-board-feature-description">{{ feature.description }}</p>
                     <div class="volet-feature-board-feature-actions">
-                        <button 
+                        <button
                             @click="toggleVote(feature)"
                             :class="[
                                 'volet-feature-board-vote-button',
@@ -73,13 +83,13 @@
                         >
                             <span>{{ feature.votes_count }} {{ labels.votes }}</span>
                         </button>
-                        <button 
+                        <button
                             @click="feature.showComments = !feature.showComments"
                             class="volet-feature-board-button volet-feature-board-button-secondary"
                         >
                             <span>{{ feature.comments?.length || 0 }} {{ labels.comments }}</span>
                         </button>
-                        <span 
+                        <span
                             :class="[
                                 'volet-feature-board-status',
                                 `volet-feature-board-status-${feature.status}`
@@ -92,18 +102,17 @@
 
                 <div v-if="feature.showComments" class="volet-feature-board-comments">
                     <div v-for="comment in feature.comments" :key="comment.id" class="volet-feature-board-comment">
-                        <div class="volet-feature-board-comment-author">{{ comment.author_name }}</div>
                         <p class="volet-feature-board-comment-content">{{ comment.content }}</p>
+                        <small class="volet-feature-board-comment-date">{{ comment.created_at }}</small>
                     </div>
-
                     <form @submit.prevent="submitComment(feature)" class="volet-feature-board-comment-form">
-                        <input 
-                            type="text" 
-                            v-model="commentForm[feature.id]" 
-                            :placeholder="labels.addComment"
-                            class="volet-feature-board-input"
-                        >
-                        <button 
+                        <textarea
+                            v-model="commentForm[feature.id]"
+                            rows="2"
+                            class="volet-feature-board-textarea"
+                            :placeholder="labels.writeComment"
+                        ></textarea>
+                        <button
                             type="submit"
                             class="volet-feature-board-button volet-feature-board-button-primary"
                         >
@@ -143,6 +152,7 @@ export default {
                 description: '',
                 category: ''
             },
+            formErrors: {},
             commentForm: {},
             statusClasses: {
                 pending: 'volet-feature-board-status-pending',
@@ -161,6 +171,21 @@ export default {
         }
     },
 
+    watch: {
+        'form.title': {
+            handler(newVal) {
+                console.log('form.title changed:', newVal)
+            },
+            immediate: true
+        },
+        'form.description': {
+            handler(newVal) {
+                console.log('form.description changed:', newVal)
+            },
+            immediate: true
+        }
+    },
+
     async created() {
         this.selectedCategory = this.categories[0]
         await this.loadFeatures()
@@ -169,7 +194,7 @@ export default {
     methods: {
         async loadFeatures() {
             try {
-                const response = await fetch(this.routes.index)
+                const response = await fetch(this.routes.features)
                 if (!response.ok) throw new Error('Network response was not ok')
                 this.features = await response.json()
             } catch (error) {
@@ -182,11 +207,15 @@ export default {
         },
 
         async submitFeature() {
+            // Reset errors before submitting
+            this.formErrors = {}
+
             try {
                 const response = await fetch(this.routes.store, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         ...this.form,
@@ -194,8 +223,16 @@ export default {
                     })
                 })
 
-                if (!response.ok) throw new Error('Network response was not ok')
-                
+                const data = await response.json()
+
+                if (!response.ok) {
+                    if (response.status === 422 && data.errors) {
+                        this.formErrors = data.errors
+                        return
+                    }
+                    throw new Error(data.message || 'Network response was not ok')
+                }
+
                 await this.loadFeatures()
                 this.showForm = false
                 this.form.title = ''
@@ -216,7 +253,7 @@ export default {
 
                 if (!response.ok) throw new Error('Network response was not ok')
                 const data = await response.json()
-                
+
                 feature.votes_count = data.votes_count
                 feature.hasVoted = data.action === 'added'
             } catch (error) {
@@ -240,13 +277,23 @@ export default {
 
                 if (!response.ok) throw new Error('Network response was not ok')
                 const comment = await response.json()
-                
+
                 if (!feature.comments) feature.comments = []
                 feature.comments.push(comment)
                 this.commentForm[feature.id] = ''
             } catch (error) {
                 console.error('Error submitting comment:', error)
             }
+        },
+
+        onTitleInput(event) {
+            console.log('Input event:', event.target.value)
+            this.form.title = event.target.value
+        },
+
+        onDescriptionInput(event) {
+            console.log('Description input:', event.target.value)
+            this.form.description = event.target.value
         }
     }
 }

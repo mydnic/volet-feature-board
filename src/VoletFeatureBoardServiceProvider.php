@@ -21,6 +21,7 @@ class VoletFeatureBoardServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigration('create_volet_features_table')
             ->hasTranslations()
+            ->hasRoute('api')
             ->hasAssets();
     }
 
@@ -30,15 +31,15 @@ class VoletFeatureBoardServiceProvider extends PackageServiceProvider
 
         // Register Blade Directives
         Blade::directive('voletFeatureBoardStyles', function () {
-            $styleUrl = asset('vendor/volet/volet-feature-board-style.css');
+            $styleUrl = asset('vendor/volet-feature-board/volet-feature-board-style.css');
 
             return "<?php echo '<link rel=\"stylesheet\" href=\"{$styleUrl}\">'; ?>";
         });
 
         Blade::directive('voletFeatureBoard', function () {
-            $scriptUrl = asset('vendor/volet/volet-feature-board-app.js');
+            $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board-app.js');
 
-            return "<?php echo '<script src=\"{$scriptUrl}\"></script>'; ?>";
+            return "<?php echo '<script type=\"module\" src=\"{$scriptUrl}\"></script>'; ?>";
         });
 
         if ($this->app->runningInConsole()) {
