@@ -10,7 +10,6 @@ use Mydnic\VoletFeatureBoard\Models\Vote;
 
 class VoteController extends Controller
 {
-
     public function store(Request $request, Feature $feature): JsonResponse
     {
         $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
