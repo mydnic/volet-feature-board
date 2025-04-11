@@ -23,8 +23,14 @@ class FeatureController extends Controller
         $features = Feature::with(['votes', 'comments'])
             ->withCount('votes')
             ->orderByDesc('votes_count')
-            ->get()
-            ->groupBy('category');
+            ->get();
+
+        $featureBoard = $this->featureManager->getFeature('volet-feature-board');
+        $categories = collect($featureBoard->getCategories());
+
+        $features->map(function ($feature) use ($categories) {
+            $feature->category = $categories->where('slug', $feature->category)->first();
+        });
 
         return response()->json($features);
     }
