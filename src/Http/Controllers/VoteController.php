@@ -2,6 +2,7 @@
 
 namespace Mydnic\VoletFeatureBoard\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Mydnic\VoletFeatureBoard\Models\Feature;
@@ -12,9 +13,13 @@ class VoteController extends Controller
 {
     use HasAuthor;
 
-    public function toggle(Feature $feature): JsonResponse
+    public function store(Request $request, Feature $feature): JsonResponse
     {
-        $authorId = $this->getAuthorId();
+        $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
+
+        if (!$authorId) {
+            return response()->json(['error' => 'No author ID provided'], 400);
+        }
 
         $vote = Vote::where('feature_id', $feature->id)
             ->where('author_id', $authorId)
@@ -33,7 +38,7 @@ class VoteController extends Controller
 
         return response()->json([
             'action' => $action,
-            'votes_count' => $feature->votesCount(),
+            'votes_count' => $feature->fresh()->votes()->count(),
         ]);
     }
 }

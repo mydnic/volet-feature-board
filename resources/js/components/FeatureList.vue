@@ -21,6 +21,7 @@
             v-for="feature in features"
             :key="feature.id"
             class="vfb:rounded-xl vfb:p-2 vfb:transition-all vfb:border vfb:border-zinc-100 vfb:shadow-sm vfb:text-left vfb:hover:bg-zinc-50 vfb:cursor-pointer vfb:block vfb:w-full"
+            @click="$emit('select-feature', feature)"
         >
             <div class="vfb:flex vfb:items-center">
                 <div class="vfb:flex vfb:items-center vfb:bg-zinc-100 vfb:px-2 vfb:py-1 vfb:rounded-full">
@@ -30,10 +31,15 @@
                     </div>
                 </div>
                 <div class="vfb:grow"></div>
-                <div class="vfb:flex vfb:items-center vfb:bg-blue-100 vfb:px-2 vfb:py-1 vfb:rounded-full">
-                    <img src="https://api.iconify.design/lucide:thumbs-up.svg?color=%232563eb" alt="like"
+                <div
+                    class="vfb:flex vfb:items-center vfb:px-2 vfb:py-1 vfb:rounded-full"
+                    :class="[
+                        feature.has_voted ? 'vfb:bg-blue-600 vfb:text-white' : 'vfb:bg-blue-100 vfb:text-blue-600'
+                    ]"
+                >
+                    <img :src="`https://api.iconify.design/lucide:thumbs-up.svg?color=%23${feature.has_voted ? 'FFF' : '2563eb'}`" alt="like"
                          class="size-4 vfb:mr-2">
-                    <span class="vfb:text-sm vfb:text-blue-600">{{ feature.votes_count }}</span>
+                    <span class="vfb:text-sm">{{ feature.votes_count }}</span>
                 </div>
             </div>
 
@@ -50,10 +56,12 @@
 </template>
 
 <script>
+import ApiService from '../services/ApiService'
+
 export default {
     name: "FeatureList",
 
-    emits: ['update:display-mode'],
+    emits: ['update:display-mode', 'select-feature'],
 
     props: {
         categories: {
@@ -81,17 +89,13 @@ export default {
     },
 
     methods: {
-        loadFeatures() {
-            fetch(this.routes.features)
-                .then(response => response.json())
-                .then(data => {
-                    this.features = data
-                })
-                .catch(error => {
-                    console.error('Error loading features:', error)
-                })
-        },
+        async loadFeatures() {
+            try {
+                this.features = await ApiService.request(this.routes.features);
+            } catch (error) {
+                console.error('Error loading features:', error);
+            }
+        }
     }
-
 }
 </script>

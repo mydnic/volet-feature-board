@@ -5,9 +5,11 @@ namespace Mydnic\VoletFeatureBoard\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Mydnic\Volet\Features\FeatureManager;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Models\Feature;
+use Mydnic\VoletFeatureBoard\Models\Vote;
 use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
 
 class FeatureController extends Controller
@@ -18,9 +20,11 @@ class FeatureController extends Controller
         protected FeatureManager $featureManager
     ) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $features = Feature::with(['votes', 'comments'])
+        $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
+
+        $features = Feature::with(['comments', 'votes'])
             ->withCount('votes')
             ->orderByDesc('votes_count')
             ->get();
@@ -28,8 +32,10 @@ class FeatureController extends Controller
         $featureBoard = $this->featureManager->getFeature('volet-feature-board');
         $categories = collect($featureBoard->getCategories());
 
-        $features->map(function ($feature) use ($categories) {
+        $features->map(function ($feature) use ($categories, $authorId) {
             $feature->category = $categories->where('slug', $feature->category)->first();
+            $feature->has_voted = $feature->votes->where('author_id', $authorId)->isNotEmpty();
+            $feature->authorid = $authorId;
         });
 
         return response()->json($features);
@@ -61,9 +67,14 @@ class FeatureController extends Controller
         return response()->json($feature);
     }
 
-    public function show(Feature $feature): JsonResponse
+    public function show(Request $request, Feature $feature): JsonResponse
     {
+        $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
+
         $feature->load(['votes', 'comments']);
+        $feature->has_voted = Vote::where('feature_id', $feature->id)
+            ->where('author_id', $authorId)
+            ->exists();
 
         return response()->json($feature);
     }

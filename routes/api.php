@@ -14,7 +14,7 @@ Route::prefix('volet')->group(function () {
             Route::post('/features', [FeatureController::class, 'store'])->name('volet.feature-board.features.store');
             Route::get('/features/{feature}', [FeatureController::class, 'show'])->name('volet.feature-board.features.show');
             Route::patch('/features/{feature}', [FeatureController::class, 'update'])->name('volet.feature-board.features.update');
-            Route::post('/features/{feature}/vote', [VoteController::class, 'toggle'])->name('volet.feature-board.features.vote');
+            Route::post('/features/{feature}/vote', [VoteController::class, 'store'])->name('volet.feature-board.features.vote');
             Route::post('/features/{feature}/comments', [CommentController::class, 'store'])->name('volet.feature-board.features.comments.store');
         });
 

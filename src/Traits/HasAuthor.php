@@ -2,40 +2,51 @@
 
 namespace Mydnic\VoletFeatureBoard\Traits;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HasAuthor
 {
-    protected function getAuthorId(): string
+    public function author(): BelongsTo
     {
-        if (Auth::check()) {
-            return 'user_'.Auth::id();
-        }
-
-        if (! Session::has('guest_id')) {
-            Session::put('guest_id', 'guest_'.str_replace('-', '', (string) \Illuminate\Support\Str::uuid()));
-        }
-
-        return Session::get('guest_id');
+        return $this->belongsTo(config('volet-feature-board.user_model'));
     }
 
-    protected function isUserAuthor(): bool
+    public function setAuthorId($authorId)
     {
-        return Auth::check() && str_starts_with($this->author_id, 'user_');
-    }
-
-    protected function isGuestAuthor(): bool
-    {
-        return str_starts_with($this->author_id, 'guest_');
-    }
-
-    protected function getAuthorName(): string
-    {
-        if ($this->isUserAuthor()) {
-            return optional(Auth::user())->name ?? 'Unknown User';
+        // If it's a guest ID, store it as is
+        if (str_starts_with($authorId, 'guest_')) {
+            $this->author_id = $authorId;
+            return;
         }
 
+        // If user is authenticated, use their ID
+        if (auth()->check()) {
+            $this->author_id = auth()->id();
+            return;
+        }
+
+        // Fallback to the provided ID (should be a guest ID)
+        $this->author_id = $authorId;
+    }
+
+    public function isAuthoredBy($authorId): bool
+    {
+        if (auth()->check()) {
+            return $this->author_id === auth()->id();
+        }
+
+        return $this->author_id === $authorId;
+    }
+
+    public function getAuthorName(): string
+    {
+        // If it's a regular user
+        if (!str_starts_with($this->author_id, 'guest_')) {
+            $user = $this->author;
+            return $user ? $user->name : 'Unknown User';
+        }
+
+        // If it's a guest
         return 'Guest';
     }
 }
