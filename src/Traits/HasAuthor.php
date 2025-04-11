@@ -16,12 +16,14 @@ trait HasAuthor
         // If it's a guest ID, store it as is
         if (str_starts_with($authorId, 'guest_')) {
             $this->author_id = $authorId;
+
             return;
         }
 
         // If user is authenticated, use their ID
         if (auth()->check()) {
             $this->author_id = auth()->id();
+
             return;
         }
 
@@ -41,8 +43,9 @@ trait HasAuthor
     public function getAuthorName(): string
     {
         // If it's a regular user
-        if (!str_starts_with($this->author_id, 'guest_')) {
+        if (! str_starts_with($this->author_id, 'guest_')) {
             $user = $this->author;
+
             return $user ? $user->name : 'Unknown User';
         }
 
