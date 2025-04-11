@@ -2,8 +2,8 @@
 
 namespace Mydnic\VoletFeatureBoard\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Mydnic\VoletFeatureBoard\Models\Feature;
 use Mydnic\VoletFeatureBoard\Models\Vote;
@@ -15,7 +15,7 @@ class VoteController extends Controller
     {
         $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
 
-        if (!$authorId) {
+        if (! $authorId) {
             return response()->json(['error' => 'No author ID provided'], 400);
         }
 
