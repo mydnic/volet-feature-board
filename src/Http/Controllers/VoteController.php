@@ -7,11 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Mydnic\VoletFeatureBoard\Models\Feature;
 use Mydnic\VoletFeatureBoard\Models\Vote;
-use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
 
 class VoteController extends Controller
 {
-    use HasAuthor;
 
     public function store(Request $request, Feature $feature): JsonResponse
     {

@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 384px;width: 360px;" class="vfb:border vfb:border-b-gray-500 vfb:p-2 vfb:m-20">
+    <div style="height: 384px;width: 360px;" class="vfb:border vfb:overflow-auto vfb:border-b-gray-500 vfb:p-2 vfb:m-20">
         <FeatureBoard
             :labels="{
                 'suggestFeature': '+ New feature',
@@ -10,7 +10,8 @@
                 'votes': 'Votes',
                 'comments': 'Comments',
                 'addComment': 'Add a comment',
-                'post': 'Post',
+                'postComment': 'Submit',
+                'commentInputPlaceholder': 'Write a comment...'
             }"
             :categories="[
                 {
@@ -28,7 +29,7 @@
                 'features': 'http://feedback.test/volet/feature-board/features',
                 'store': 'http://feedback.test/volet/feature-board/features',
                 'vote': 'http://feedback.test/volet/feature-board/features/{id}/vote',
-                'comment': 'http://feedback.test/volet/feature-board/features/{id}/comment'
+                'comment': 'http://feedback.test/volet/feature-board/features/{id}/comments'
             }"
         />
     </div>

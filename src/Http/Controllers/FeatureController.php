@@ -10,12 +10,9 @@ use Mydnic\Volet\Features\FeatureManager;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Models\Feature;
 use Mydnic\VoletFeatureBoard\Models\Vote;
-use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
 
 class FeatureController extends Controller
 {
-    use HasAuthor;
-
     public function __construct(
         protected FeatureManager $featureManager
     ) {}

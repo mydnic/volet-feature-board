@@ -1,16 +1,16 @@
 <template>
-    <form @submit.prevent="submitComment" class="vfb:space-y-4">
+    <form @submit.prevent="submitComment" class="vfb:space-y-2 vfb:text-right">
         <textarea
             v-model="content"
             rows="2"
             class="vfb:w-full vfb:rounded-lg vfb:border vfb:border-gray-300 vfb:p-2 vfb:focus:border-blue-500 vfb:focus:ring-blue-500"
-            :placeholder="labels.writeComment"
+            :placeholder="labels.commentInputPlaceholder"
         ></textarea>
         <button
             type="submit"
-            class="vfb:volet-feature-board-button vfb:volet-feature-board-button-primary"
+            class="volet-button"
         >
-            {{ labels.post }}
+            {{ labels.postComment }}
         </button>
     </form>
 </template>

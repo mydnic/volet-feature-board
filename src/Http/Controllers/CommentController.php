@@ -7,21 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Mydnic\VoletFeatureBoard\Models\Comment;
 use Mydnic\VoletFeatureBoard\Models\Feature;
-use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
 
 class CommentController extends Controller
 {
-    use HasAuthor;
-
     public function store(Request $request, Feature $feature): JsonResponse
     {
         $request->validate([
             'content' => 'required|string',
         ]);
 
+        $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
+
+        if (!$authorId) {
+            return response()->json(['error' => 'No author ID provided'], 400);
+        }
+
         $comment = Comment::create([
             'feature_id' => $feature->id,
-            'author_id' => $this->getAuthorId(),
+            'author_id' => $authorId,
             'content' => $request->input('content'),
         ]);
 

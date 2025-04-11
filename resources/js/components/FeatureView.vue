@@ -33,21 +33,14 @@
             </div>
         </div>
         <p class="vfb:text-gray-600 vfb:overflow-hidden">{{ feature.description }}</p>
-        <div class="vfb:flex vfb:items-center vfb:gap-4">
-            <button
-                @click="showComments = !showComments"
-                class="volet-button"
-            >
-                <span>{{ feature.comments?.length || 0 }} {{ labels.comments }}</span>
-            </button>
-        </div>
 
-        <div v-if="showComments" class="vfb:space-y-4">
-            <FeatureComments :comments="feature.comments" />
+        <div class="vfb:space-y-4 vfb:pt-4 vfb:border-t vfb:border-zinc-200">
+            <div class="vfb:text-gray-500 vfb:text-sm vfb:font-semibold">Comments</div>
             <FeatureCommentForm
                 :labels="labels"
                 @submit="submitComment"
             />
+            <FeatureComments :comments="feature.comments" />
         </div>
     </div>
 </template>
