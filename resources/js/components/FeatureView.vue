@@ -11,7 +11,7 @@
                 aria-haspopup="dialog"
             >
                 <img src="https://api.iconify.design/lucide:x.svg?color=%2371717b" alt="add feature" class="vfb:size-4 vfb:-ml-1 vfb:mr-2">
-                Back
+                {{ labels.back }}
             </button>
         </div>
         <div class="vfb:flex vfb:items-center vfb:space-x-4">

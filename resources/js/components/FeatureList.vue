@@ -2,8 +2,8 @@
     <div class="vfb:space-y-6">
         <div class="vfb:flex vfb:items-center vfb:justify-between">
             <div>
-                <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">Features List</h1>
-                <p class="vfb:mt-1 vfb:text-sm vfb:text-zinc-500">{{ features.length }} feature found</p>
+                <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">{{ labels.featuresTitle }}</h1>
+                <p class="vfb:mt-1 vfb:text-sm vfb:text-zinc-500">{{ features.length }} {{ features.length > 1 ? labels.featureCountPlural : labels.featureCount }}</p>
             </div>
             <button
                 @click="$emit('update:display-mode', 'feature-create')"
@@ -13,7 +13,7 @@
             >
                 <img src="https://api.iconify.design/lucide:plus.svg?color=%23FFF" alt="add feature"
                      class="vfb:size-4 vfb:mr-2">
-                New feature
+                {{ labels.addFeatureButton }}
             </button>
         </div>
 
