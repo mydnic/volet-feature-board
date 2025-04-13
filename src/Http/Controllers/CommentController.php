@@ -18,7 +18,7 @@ class CommentController extends Controller
 
         $authorId = auth()->check() ? auth()->id() : $request->header('X-Guest-ID');
 
-        if (!$authorId) {
+        if (! $authorId) {
             return response()->json(['error' => 'No author ID provided'], 400);
         }
 
