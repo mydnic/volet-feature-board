@@ -57,7 +57,7 @@ class FeatureController extends Controller
             'description' => $request->description,
             'category' => $request->category,
             'status' => FeatureStatus::PENDING,
-            'author_id' => $this->getAuthorId(),
+            'author_id' => auth()->check() ? auth()->id() : $request->header('X-Guest-ID'),
         ]);
 
         return response()->json($feature);
