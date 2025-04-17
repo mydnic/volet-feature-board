@@ -5,7 +5,7 @@
                 <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">{{ labels.createFormTitle }}</h1>
             </div>
             <button
-                @click="$emit('close')"
+                @click="emit('close')"
                 class="volet-button vfb:flex vfb:items-center vfb:bg-white! vfb:ring-1 vfb:ring-zinc-300 vfb:text-zinc-500!"
                 type="button"
                 aria-haspopup="dialog"
@@ -67,69 +67,50 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "FeatureCreateForm",
-    emits: ['created', 'close'],
+<script setup>
+import { ref } from 'vue'
+import ApiService from '../services/ApiService'
 
-    props: {
-        categories: {
-            type: Array,
-            required: true
-        },
-        routes: {
-            type: Object,
-            required: true
-        },
-        labels: {
-            type: Object,
-            required: true
-        }
+const props = defineProps({
+    categories: {
+        type: Array,
+        required: true
     },
-
-    data () {
-        return {
-            formErrors: {},
-            isLoading: false,
-            form: {
-                category: null,
-                title: '',
-                description: ''
-            }
-        }
+    routes: {
+        type: Object,
+        required: true
     },
+    labels: {
+        type: Object,
+        required: true
+    }
+})
 
-    methods: {
-        submit() {
-            this.formErrors = {}
-            this.isLoading = true
-            fetch(this.routes.store, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    ...this.form,
-                })
-            })
-                .then(response => response.json())
-                .then((response) => {
-                    // this.$emit('close')
-                    if (response.errors) {
-                        this.formErrors = response.errors
-                    } else {
-                        this.$emit('close')
-                    }
-                })
-                .catch(error => {
-                    this.formErrors = error.response.errors
-                    console.error('Error submitting feature:', error, error.response)
-                })
-                .finally(() => {
-                    this.isLoading = false
-                })
-        },
+const emit = defineEmits(['created', 'close'])
+
+const formErrors = ref({})
+const isLoading = ref(false)
+const form = ref({
+    category: null,
+    title: '',
+    description: ''
+})
+
+async function submit() {
+    formErrors.value = {}
+    isLoading.value = true
+
+    try {
+        const response = await ApiService.post(props.routes.store, form.value)
+        emit('created')
+        emit('close')
+    } catch (error) {
+        if (error.response?.data?.errors) {
+            formErrors.value = error.response.data.errors
+        }
+        console.error('Error submitting feature:', error)
+    } finally {
+        isLoading.value = false
     }
 }
 </script>
