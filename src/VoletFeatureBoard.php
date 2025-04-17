@@ -50,9 +50,9 @@ class VoletFeatureBoard extends BaseFeature
             'routes' => [
                 'features' => route('volet.feature-board.features.index'),
                 'store' => route('volet.feature-board.features.store'),
-                'show' => route('volet.feature-board.features.show', ['feature' => 'FEATURE_ID']),
-                'vote' => route('volet.feature-board.features.vote', ['feature' => 'FEATURE_ID']),
-                'comments' => route('volet.feature-board.features.comments.store', ['feature' => 'FEATURE_ID']),
+                'show' => route('volet.feature-board.features.show', ['feature' => '_feature_id_']),
+                'vote' => route('volet.feature-board.features.vote', ['feature' => '_feature_id_']),
+                'comments' => route('volet.feature-board.features.comments.store', ['feature' => '_feature_id_']),
             ],
             'labels' => trans('volet-feature-board::volet-feature-board'),
             'categories' => $this->getCategories(),

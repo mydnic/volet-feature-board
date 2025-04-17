@@ -39,7 +39,7 @@
 import FeatureCreateForm from "./FeatureCreateForm.vue";
 import FeatureList from "./FeatureList.vue";
 import FeatureView from "./FeatureView.vue";
-import { ref } from 'vue';
+const { ref } = window.VoletVue;
 
 const props = defineProps({
     categories: {

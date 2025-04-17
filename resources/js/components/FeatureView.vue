@@ -5,7 +5,7 @@
                 <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">{{ feature.title }}</h1>
             </div>
             <button
-                @click="$emit('close')"
+                @click="emit('close')"
                 class="volet-button vfb:shrink-0 vfb:flex vfb:items-center vfb:bg-white! vfb:ring-1 vfb:ring-zinc-300 vfb:text-zinc-500!"
                 type="button"
                 aria-haspopup="dialog"
@@ -45,64 +45,54 @@
     </div>
 </template>
 
-<script>
+<script setup>
+const { ref } = window.VoletVue;
+
 import FeatureVote from './FeatureVote.vue'
 import FeatureComments from './FeatureComments.vue'
 import FeatureCommentForm from './FeatureCommentForm.vue'
 import FeatureStatus from './FeatureStatus.vue'
 import ApiService from '../services/ApiService';
 
-export default {
-    name: "FeatureView",
-    components: {
-        FeatureVote,
-        FeatureComments,
-        FeatureCommentForm,
-        FeatureStatus
+const props = defineProps({
+    feature: {
+        type: Object,
+        required: true
     },
-    props: {
-        feature: {
-            type: Object,
-            required: true
-        },
-        routes: {
-            type: Object,
-            required: true
-        },
-        labels: {
-            type: Object,
-            required: true
-        }
+    routes: {
+        type: Object,
+        required: true
     },
-    data() {
-        return {
-            showComments: false
-        }
-    },
-    methods: {
-        async toggleVote() {
-            try {
-                const data = await ApiService.post(this.routes.vote.replace('{id}', this.feature.id));
-                this.feature.votes_count = data.votes_count;
-                this.feature.has_voted = data.action === 'added';
-            } catch (error) {
-                console.error('Error toggling vote:', error);
-            }
-        },
-
-        async submitComment(content) {
-            try {
-                const comment = await ApiService.post(
-                    this.routes.comment.replace('{id}', this.feature.id),
-                    { content }
-                );
-
-                if (!this.feature.comments) this.feature.comments = [];
-                this.feature.comments.push(comment);
-            } catch (error) {
-                console.error('Error submitting comment:', error);
-            }
-        }
+    labels: {
+        type: Object,
+        required: true
     }
-}
+});
+
+const showComments = ref(false);
+const emit = defineEmits(['close']);
+
+const toggleVote = async () => {
+    try {
+        const data = await ApiService.post(props.routes.vote.replace('_feature_id_', props.feature.id));
+        props.feature.votes_count = data.votes_count;
+        props.feature.has_voted = data.action === 'added';
+    } catch (error) {
+        console.error('Error toggling vote:', error);
+    }
+};
+
+const submitComment = async (content) => {
+    try {
+        const comment = await ApiService.post(
+            props.routes.comment.replace('_feature_id_', props.feature.id),
+            { content }
+        );
+
+        if (!props.feature.comments) props.feature.comments = [];
+        props.feature.comments.push(comment);
+    } catch (error) {
+        console.error('Error submitting comment:', error);
+    }
+};
 </script>

@@ -34,8 +34,8 @@
             :routes="{
                 'features': 'http://feedback.test/volet/feature-board/features',
                 'store': 'http://feedback.test/volet/feature-board/features',
-                'vote': 'http://feedback.test/volet/feature-board/features/{id}/vote',
-                'comment': 'http://feedback.test/volet/feature-board/features/{id}/comments'
+                'vote': 'http://feedback.test/volet/feature-board/features/_feature_id_/vote',
+                'comment': 'http://feedback.test/volet/feature-board/features/_feature_id_/comments'
             }"
         />
     </div>

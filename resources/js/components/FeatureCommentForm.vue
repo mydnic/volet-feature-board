@@ -15,26 +15,23 @@
     </form>
 </template>
 
-<script>
-export default {
-    name: "FeatureCommentForm",
-    props: {
-        labels: {
-            type: Object,
-            required: true
-        }
-    },
-    data() {
-        return {
-            content: ''
-        }
-    },
-    methods: {
-        submitComment() {
-            if (!this.content) return
-            this.$emit('submit', this.content)
-            this.content = ''
-        }
+<script setup>
+const { ref } = window.VoletVue;
+
+const props = defineProps({
+    labels: {
+        type: Object,
+        required: true
     }
-}
+});
+
+const content = ref('');
+
+const submitComment = () => {
+    if (!content.value) return;
+    emit('submit', content.value);
+    content.value = '';
+};
+
+const emit = defineEmits(['submit']);
 </script>

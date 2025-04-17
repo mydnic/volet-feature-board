@@ -21,9 +21,10 @@
         >
             <div>
                 <select
-                    v-model="form.category"
+                    :model-value="form.category"
                     class="vfb:block vfb:w-full vfb:px-3 vfb:py-2 vfb:text-base vfb:text-zinc-700 vfb:ring-1 vfb:ring-zinc-100 vfb:rounded-md vfb:shadow-sm vfb:focus:vfb:outline-none vfb:focus:vfb:ring vfb:focus:vfb:ring-zinc-200 vfb:focus:vfb:border-zinc-200"
                     :class="{ 'vfb:border-red-500! vfb:text-red-800': formErrors.category }"
+                    @update:model-value="setCategory"
                 >
                     <option :value="null" selected>{{ labels.categoryPlaceholder }}</option>
                     <option v-for="category in categories" :key="category.id" :value="category.slug">
@@ -37,7 +38,7 @@
             <div>
                 <input
                     type="text"
-                    v-model="form.title"
+                    v-model="formTitle"
                     :placeholder="labels.title"
                     class="vfb:block vfb:w-full vfb:px-3 vfb:py-2 vfb:text-base vfb:text-zinc-700 vfb:ring-1 vfb:ring-zinc-100 vfb:rounded-md vfb:shadow-sm vfb:focus:vfb:outline-none vfb:focus:vfb:ring vfb:focus:vfb:ring-zinc-200 vfb:focus:vfb:border-zinc-200"
                     :class="{ 'vfb:ring-red-500! vfb:text-red-800': formErrors.title }"
@@ -64,11 +65,12 @@
                 </button>
             </div>
         </form>
+        {{formTitle}}
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue';
 import ApiService from '../services/ApiService'
 
 const props = defineProps({
@@ -90,7 +92,8 @@ const emit = defineEmits(['created', 'close'])
 
 const formErrors = ref({})
 const isLoading = ref(false)
-const form = ref({
+const formTitle = ref('')
+const form = reactive({
     category: null,
     title: '',
     description: ''
@@ -101,7 +104,7 @@ async function submit() {
     isLoading.value = true
 
     try {
-        const response = await ApiService.post(props.routes.store, form.value)
+        const response = await ApiService.post(props.routes.store, form)
         emit('created')
         emit('close')
     } catch (error) {
@@ -112,5 +115,9 @@ async function submit() {
     } finally {
         isLoading.value = false
     }
+}
+
+function setCategory(value) {
+    form.category = value
 }
 </script>
