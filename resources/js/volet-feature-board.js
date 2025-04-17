@@ -1,13 +1,18 @@
 import FeatureBoard from './components/FeatureBoard.vue'
+import FeatureList from './components/FeatureList.vue'
+import FeatureCreateForm from './components/FeatureCreateForm.vue'
+import FeatureView from './components/FeatureView.vue'
 
-function registerComponent() {
+function registerComponents() {
     if (window.Volet) {
         window.Volet.component('FeatureBoard', FeatureBoard);
+        window.Volet.component('FeatureList', FeatureList);
+        window.Volet.component('FeatureCreateForm', FeatureCreateForm);
+        window.Volet.component('FeatureView', FeatureView);
     } else {
         console.log("Volet not found, retrying...");
-        setTimeout(registerComponent, 100); // Retry after 100ms
+        setTimeout(registerComponents, 100);
     }
 }
 
-// Try registering once the DOM is ready
-document.addEventListener("DOMContentLoaded", registerComponent);
+document.addEventListener("DOMContentLoaded", registerComponents);

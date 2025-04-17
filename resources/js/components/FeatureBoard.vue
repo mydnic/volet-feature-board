@@ -18,7 +18,6 @@
             :routes="routes"
             :labels="labels"
             @created="() => {
-                loadFeatures()
                 displayMode = 'feature-list'
             }"
             @close="() => displayMode = 'feature-list'"
@@ -36,38 +35,27 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import FeatureCreateForm from "./FeatureCreateForm.vue";
 import FeatureList from "./FeatureList.vue";
 import FeatureView from "./FeatureView.vue";
+import { ref } from 'vue';
 
-export default {
-    components: {
-        FeatureCreateForm,
-        FeatureList,
-        FeatureView
+const props = defineProps({
+    categories: {
+        type: Array,
+        required: true,
     },
-
-    props: {
-        categories: {
-            type: Array,
-            required: true
-        },
-        routes: {
-            type: Object,
-            required: true
-        },
-        labels: {
-            type: Object,
-            required: true
-        }
+    routes: {
+        type: Object,
+        required: true,
     },
+    labels: {
+        type: Object,
+        required: true,
+    },
+});
 
-    data() {
-        return {
-            displayMode: 'feature-list',
-            selectedFeature: null,
-        }
-    }
-}
+const displayMode = ref('feature-list');
+const selectedFeature = ref(null);
 </script>
