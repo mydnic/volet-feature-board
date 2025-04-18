@@ -39,7 +39,7 @@
 import FeatureCreateForm from "./FeatureCreateForm.vue";
 import FeatureList from "./FeatureList.vue";
 import FeatureView from "./FeatureView.vue";
-const { ref } = window.VoletVue;
+import { ref } from "vue";
 
 const props = defineProps({
     categories: {
@@ -59,3 +59,7 @@ const props = defineProps({
 const displayMode = ref('feature-list');
 const selectedFeature = ref(null);
 </script>
+
+<style>
+@import '../../css/volet-feature-board.css';
+</style>

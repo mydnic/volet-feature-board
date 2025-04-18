@@ -23,9 +23,9 @@ class VoletFeatureBoard extends BaseFeature
         return 'https://api.iconify.design/lucide:lightbulb.svg?color=%23888888';
     }
 
-    public function getVueComponent(): ?string
+    public function getComponentName(): ?string
     {
-        return 'FeatureBoard';
+        return 'feature-board';
     }
 
     public function addCategory(string $slug, string $name, string $icon): static

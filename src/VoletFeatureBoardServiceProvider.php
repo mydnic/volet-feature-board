@@ -31,15 +31,15 @@ class VoletFeatureBoardServiceProvider extends PackageServiceProvider
 
         // Register Blade Directives
         Blade::directive('voletFeatureBoardStyles', function () {
-            $styleUrl = asset('vendor/volet-feature-board/volet-feature-board-style.css');
+            $styleUrl = asset('vendor/volet-feature-board/volet-feature-board.css');
 
             return "<?php echo '<link rel=\"stylesheet\" href=\"{$styleUrl}\">'; ?>";
         });
 
         Blade::directive('voletFeatureBoard', function () {
-            $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board-app.js');
+            $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board.js');
 
-            return "<?php echo '<script type=\"module\" src=\"{$scriptUrl}\"></script>'; ?>";
+            return "<?php echo '<script src=\"{$scriptUrl}\"></script>'; ?>";
         });
 
         if ($this->app->runningInConsole()) {

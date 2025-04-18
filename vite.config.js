@@ -5,20 +5,25 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
     plugins: [
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                    isCustomElement: (tag) => tag.includes('feature-board'),
+                }
+            }
+        }),
         tailwindcss()
     ],
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    },
     build: {
+        lib: {
+            entry: resolve(__dirname, 'resources/js/volet-feature-board.js'),
+            name: 'FeatureBoard',
+            fileName: () => `volet-feature-board.js`,
+            formats: ['iife'],
+        },
         outDir: 'resources/dist',
-        rollupOptions: {
-            input: {
-                'volet-feature-board-app': resolve(__dirname, 'resources/js/volet-feature-board.js'),
-                'volet-feature-board-style': resolve(__dirname, 'resources/css/volet-feature-board.css')
-            },
-            output: {
-                entryFileNames: '[name].js',
-                assetFileNames: '[name][extname]'
-            }
-        }
     }
 });
