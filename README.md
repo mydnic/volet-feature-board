@@ -48,6 +48,12 @@ $voletFeatureboard = new Mydnic\VoletFeatureboard();
 echo $voletFeatureboard->echoPhrase('Hello, Mydnic!');
 ```
 
+
+### Issue with Tailwind
+
+https://github.com/tailwindlabs/tailwindcss/issues/15005
+
+
 ## Testing
 
 ```bash

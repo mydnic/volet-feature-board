@@ -1,18 +1,18 @@
 <template>
-    <div class="vfb:space-y-6">
-        <div class="vfb:flex vfb:items-center vfb:justify-between">
+    <div class="space-y-6">
+        <div class="flex items-center justify-between">
             <div>
-                <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">{{ labels.featuresTitle }}</h1>
-                <p class="vfb:mt-1 vfb:text-sm vfb:text-zinc-500">{{ features.length }} {{ features.length > 1 ? labels.featureCountPlural : labels.featureCount }}</p>
+                <h1 class="text-xl font-semibold text-zinc-900">{{ labels.featuresTitle }}</h1>
+                <p class="mt-1 text-sm text-zinc-500">{{ features.length }} {{ features.length > 1 ? labels.featureCountPlural : labels.featureCount }}</p>
             </div>
             <button
                 @click="$emit('update:display-mode', 'feature-create')"
-                class="volet-button vfb:flex vfb:items-center"
+                class="vfb-button"
                 type="button"
                 aria-haspopup="dialog"
             >
                 <img src="https://api.iconify.design/lucide:plus.svg?color=%23FFF" alt="add feature"
-                     class="vfb:size-4 vfb:mr-2">
+                     class="size-4 mr-2">
                 {{ labels.addFeatureButton }}
             </button>
         </div>
@@ -20,34 +20,34 @@
         <button
             v-for="feature in features"
             :key="feature.id"
-            class="vfb:rounded-xl vfb:p-2 vfb:transition-all vfb:border vfb:border-zinc-100 vfb:shadow-sm vfb:text-left vfb:hover:bg-zinc-50 vfb:cursor-pointer vfb:block vfb:w-full"
+            class="vfb-card"
             @click="$emit('select-feature', feature)"
         >
-            <div class="vfb:flex vfb:items-center">
-                <div class="vfb:flex vfb:items-center vfb:bg-zinc-100 vfb:px-2 vfb:py-1 vfb:rounded-full">
+            <div class="flex items-center">
+                <div class="flex items-center bg-zinc-100 px-2 py-1 rounded-full">
                     <img :src="feature.category.icon" :alt="feature.category" class="size-4">
-                    <div class="vfb:text-sm vfb:text-gray-500 vfb:ml-2">
+                    <div class="text-sm text-gray-500 ml-2">
                         {{ feature.category.name }}
                     </div>
                 </div>
-                <div class="vfb:grow"></div>
+                <div class="grow"></div>
                 <div
-                    class="vfb:flex vfb:items-center vfb:px-2 vfb:py-1 vfb:rounded-full"
+                    class="flex items-center px-2 py-1 rounded-full"
                     :class="[
-                        feature.has_voted ? 'vfb:bg-blue-600 vfb:text-white' : 'vfb:bg-blue-100 vfb:text-blue-600'
+                        feature.has_voted ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
                     ]"
                 >
                     <img :src="`https://api.iconify.design/lucide:thumbs-up.svg?color=%23${feature.has_voted ? 'FFF' : '2563eb'}`" alt="like"
-                         class="size-4 vfb:mr-2">
-                    <span class="vfb:text-sm">{{ feature.votes_count }}</span>
+                         class="size-4 mr-2">
+                    <span class="text-sm">{{ feature.votes_count }}</span>
                 </div>
             </div>
 
-            <div class="vfb:mt-2">
-                <h3 class="vfb:text-lg vfb:font-semibold vfb:line-clamp-2 vfb:text-zinc-900">
+            <div class="mt-2">
+                <h3 class="text-lg font-semibold line-clamp-2 text-zinc-900">
                     {{ feature.title }}
                 </h3>
-                <p class="vfb:mt-1 vfb:line-clamp-1 vfb:text-sm vfb:text-zinc-500">
+                <p class="mt-1 line-clamp-1 text-sm text-zinc-500">
                     {{ feature.description }}
                 </p>
             </div>

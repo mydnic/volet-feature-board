@@ -2,8 +2,8 @@
     <button
         @click="$emit('vote')"
         :class="[
-            'volet-button',
-            { 'vfb:bg-blue-100! vfb:text-blue-600!': hasVoted }
+            'vfb-button',
+            { 'bg-blue-100! text-blue-600!': hasVoted }
         ]"
     >
         <span>{{ votesCount }} {{ labels.votes }}</span>

@@ -1,6 +1,6 @@
 <template>
     <span :class="[
-        'vfb:px-3 vfb:py-1 vfb:rounded-full vfb:flex vfb:items-center vfb:text-sm',
+        'px-3 py-1 rounded-full flex items-center text-sm',
         statusClasses[status] || statusClasses.pending
     ]">
         {{ status }}
@@ -19,10 +19,10 @@ export default {
     computed: {
         statusClasses() {
             return {
-                pending: 'vfb:bg-yellow-100 vfb:text-yellow-800',
-                approved: 'vfb:bg-blue-100 vfb:text-blue-800',
-                rejected: 'vfb:bg-red-100 vfb:text-red-800',
-                completed: 'vfb:bg-green-100 vfb:text-green-800'
+                pending: 'bg-yellow-100 text-yellow-800',
+                approved: 'bg-blue-100 text-blue-800',
+                rejected: 'bg-red-100 text-red-800',
+                completed: 'bg-green-100 text-green-800'
             }
         }
     }

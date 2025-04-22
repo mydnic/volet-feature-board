@@ -28,6 +28,12 @@ class VoletFeatureBoard extends BaseFeature
         return 'feature-board';
     }
 
+    public function getScripts(): ?string
+    {
+        $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board.js');
+        return "<script src=\"{$scriptUrl}\"></script>";
+    }
+
     public function addCategory(string $slug, string $name, string $icon): static
     {
         $this->categories[] = [

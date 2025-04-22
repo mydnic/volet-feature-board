@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 384px;width: 360px;" class="vfb:border vfb:overflow-auto vfb:border-b-gray-500 vfb:p-2 vfb:m-20">
+    <div style="height: 384px;width: 360px;" class="border overflow-auto border-b-gray-500 p-2 m-20">
         <FeatureBoard
             :labels="{
                 'addFeatureButton': 'New feature',
@@ -35,14 +35,14 @@
                 'features': 'http://feedback.test/volet/feature-board/features',
                 'store': 'http://feedback.test/volet/feature-board/features',
                 'vote': 'http://feedback.test/volet/feature-board/features/_feature_id_/vote',
-                'comment': 'http://feedback.test/volet/feature-board/features/_feature_id_/comments'
+                'comments': 'http://feedback.test/volet/feature-board/features/_feature_id_/comments'
             }"
         />
     </div>
 </template>
 
 <script>
-import FeatureBoard from "./resources/js/components/FeatureBoard.vue";
+import FeatureBoard from "./resources/js/components/FeatureBoard.ce.vue";
 
 export default {
     components: {

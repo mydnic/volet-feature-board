@@ -1,29 +1,29 @@
 <template>
-    <div class="vfb:space-y-3" v-if="feature">
-        <div class="vfb:flex vfb:items-start vfb:space-x-4 vfb:justify-between">
+    <div class="space-y-3" v-if="feature">
+        <div class="flex items-start space-x-4 justify-between">
             <div>
-                <h1 class="vfb:text-xl vfb:font-semibold vfb:text-zinc-900">{{ feature.title }}</h1>
+                <h1 class="text-xl font-semibold text-zinc-900">{{ feature.title }}</h1>
             </div>
             <button
-                @click="emit('close')"
-                class="volet-button vfb:shrink-0 vfb:flex vfb:items-center vfb:bg-white! vfb:ring-1 vfb:ring-zinc-300 vfb:text-zinc-500!"
+                @click="$emit('close')"
+                class="vfb-button-outline shrink-0"
                 type="button"
                 aria-haspopup="dialog"
             >
-                <img src="https://api.iconify.design/lucide:x.svg?color=%2371717b" alt="add feature" class="vfb:size-4 vfb:-ml-1 vfb:mr-2">
+                <img src="https://api.iconify.design/lucide:x.svg?color=%2371717b" alt="add feature" class="size-4 mr-2">
                 {{ labels.back }}
             </button>
         </div>
-        <div class="vfb:flex vfb:items-center vfb:space-x-4">
-            <div class="vfb:flex vfb:items-center vfb:bg-zinc-100 vfb:px-2 vfb:py-1 vfb:rounded-full">
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center bg-zinc-100 px-2 py-1 rounded-full">
                 <img :src="feature.category.icon" :alt="feature.category" class="size-4">
-                <div class="vfb:text-sm vfb:text-gray-500 vfb:ml-2">
+                <div class="text-sm text-gray-500 ml-2">
                     {{ feature.category.name }}
                 </div>
             </div>
             <FeatureStatus :status="feature.status" />
-            <div class="vfb:grow"></div>
-            <div class="vfb:flex vfb:items-center vfb:space-x-3">
+            <div class="grow"></div>
+            <div class="flex items-center space-x-3">
                 <FeatureVote
                     :votes-count="feature.votes_count"
                     :has-voted="feature.has_voted"
@@ -32,67 +32,70 @@
                 />
             </div>
         </div>
-        <p class="vfb:text-gray-600 vfb:overflow-hidden">{{ feature.description }}</p>
+        <p class="text-gray-600 overflow-hidden">{{ feature.description }}</p>
 
-        <div class="vfb:space-y-4 vfb:pt-4 vfb:border-t vfb:border-zinc-200">
-            <div class="vfb:text-gray-500 vfb:text-sm vfb:font-semibold">Comments</div>
+        <div class="space-y-4 pt-4 border-t border-zinc-200">
+            <div class="text-gray-500 text-sm font-semibold">Comments</div>
             <FeatureCommentForm
                 :labels="labels"
-                @submit="submitComment"
+                :feature-id="feature.id"
+                :routes="routes"
+                @created="addComment"
             />
             <FeatureComments :comments="feature.comments" />
         </div>
     </div>
 </template>
 
-<script setup>
-const { ref } = window.VoletVue;
-
+<script>
 import FeatureVote from './FeatureVote.vue'
 import FeatureComments from './FeatureComments.vue'
 import FeatureCommentForm from './FeatureCommentForm.vue'
 import FeatureStatus from './FeatureStatus.vue'
 import ApiService from '../services/ApiService';
 
-const props = defineProps({
-    feature: {
-        type: Object,
-        required: true
+export default {
+    name: 'FeatureView',
+    components: {
+        FeatureVote,
+        FeatureComments,
+        FeatureCommentForm,
+        FeatureStatus
     },
-    routes: {
-        type: Object,
-        required: true
+    props: {
+        feature: {
+            type: Object,
+            required: true
+        },
+        routes: {
+            type: Object,
+            required: true
+        },
+        labels: {
+            type: Object,
+            required: true
+        }
     },
-    labels: {
-        type: Object,
-        required: true
-    }
-});
-
-const showComments = ref(false);
-const emit = defineEmits(['close']);
-
-const toggleVote = async () => {
-    try {
-        const data = await ApiService.post(props.routes.vote.replace('_feature_id_', props.feature.id));
-        props.feature.votes_count = data.votes_count;
-        props.feature.has_voted = data.action === 'added';
-    } catch (error) {
-        console.error('Error toggling vote:', error);
-    }
-};
-
-const submitComment = async (content) => {
-    try {
-        const comment = await ApiService.post(
-            props.routes.comment.replace('_feature_id_', props.feature.id),
-            { content }
-        );
-
-        if (!props.feature.comments) props.feature.comments = [];
-        props.feature.comments.push(comment);
-    } catch (error) {
-        console.error('Error submitting comment:', error);
-    }
-};
+    data() {
+        return {
+            showComments: false
+        }
+    },
+    methods: {
+        async toggleVote() {
+            try {
+                const data = await ApiService.post(this.routes.vote.replace('_feature_id_', this.feature.id));
+                this.feature.votes_count = data.votes_count;
+                this.feature.has_voted = data.action === 'added';
+            } catch (error) {
+                console.error('Error toggling vote:', error);
+            }
+        },
+        addComment(comment) {
+            if (!this.feature.comments) this.feature.comments = [];
+            this.feature.comments.push(comment);
+        }
+    },
+    emits: ['close']
+}
 </script>

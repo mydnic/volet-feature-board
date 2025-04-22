@@ -1,37 +1,63 @@
 <template>
-    <form @submit.prevent="submitComment" class="vfb:space-y-2 vfb:text-right">
+    <form @submit.prevent="submitComment" class="space-y-2 text-right">
         <textarea
             v-model="content"
             rows="2"
-            class="vfb:w-full vfb:rounded-lg vfb:border vfb:border-gray-300 vfb:p-2 vfb:focus:border-blue-500 vfb:focus:ring-blue-500"
+            class="vfb-input"
             :placeholder="labels.commentInputPlaceholder"
         ></textarea>
         <button
             type="submit"
-            class="volet-button"
+            class="vfb-button"
         >
             {{ labels.postComment }}
         </button>
+        <div v-if="success" class="text-green-600 text-sm mt-1 text-left">Comment posted!</div>
     </form>
 </template>
 
-<script setup>
-const { ref } = window.VoletVue;
+<script>
+import ApiService from '../services/ApiService';
 
-const props = defineProps({
-    labels: {
-        type: Object,
-        required: true
-    }
-});
-
-const content = ref('');
-
-const submitComment = () => {
-    if (!content.value) return;
-    emit('submit', content.value);
-    content.value = '';
-};
-
-const emit = defineEmits(['submit']);
+export default {
+    name: 'FeatureCommentForm',
+    props: {
+        labels: {
+            type: Object,
+            required: true
+        },
+        featureId: {
+            type: [String, Number],
+            required: true
+        },
+        routes: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            content: '',
+            success: false
+        }
+    },
+    methods: {
+        async submitComment() {
+            if (!this.content) return;
+            try {
+                const comment = await ApiService.post(
+                    this.routes.comments.replace('_feature_id_', this.featureId),
+                    { content: this.content }
+                );
+                this.$emit('created', comment);
+                this.content = '';
+                this.success = true;
+                setTimeout(() => { this.success = false }, 2000);
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+            }
+        }
+    },
+    emits: ['created']
+}
 </script>

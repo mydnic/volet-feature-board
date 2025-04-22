@@ -29,19 +29,6 @@ class VoletFeatureBoardServiceProvider extends PackageServiceProvider
     {
         parent::boot();
 
-        // Register Blade Directives
-        Blade::directive('voletFeatureBoardStyles', function () {
-            $styleUrl = asset('vendor/volet-feature-board/volet-feature-board.css');
-
-            return "<?php echo '<link rel=\"stylesheet\" href=\"{$styleUrl}\">'; ?>";
-        });
-
-        Blade::directive('voletFeatureBoard', function () {
-            $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board.js');
-
-            return "<?php echo '<script src=\"{$scriptUrl}\"></script>'; ?>";
-        });
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../resources/dist' => public_path('vendor/volet'),
