@@ -28,31 +28,32 @@ You can publish the config file with:
 php artisan vendor:publish --tag="volet-feature-board-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="volet-feature-board-views"
-```
-
 ## Usage
 
+Register the plugin in VoletServiceProvider
 ```php
-$voletFeatureboard = new Mydnic\VoletFeatureboard();
-echo $voletFeatureboard->echoPhrase('Hello, Mydnic!');
+ $volet->register(
+     (new VoletFeatureBoard())
+         ->addCategory(
+             slug: 'idea',
+             name: 'Idea',
+             icon: 'https://api.iconify.design/lucide:lightbulb.svg?color=%23888888'
+         )
+         ->addCategory(
+             slug: 'issue',
+             name: 'Issue',
+             icon: 'https://api.iconify.design/lucide:wrench.svg?color=%23888888'
+         )
+ );
 ```
-
 
 ### Issue with Tailwind
 
-https://github.com/tailwindlabs/tailwindcss/issues/15005
+This package was built with TailwindCSS, to demonstrate that it's possible to use any framework and have a final compiled javascript that can be used by Volet, even in an application that does not use TailwindCSS.
 
+However, there is a known issue with TailwindCSS that makes some utilities not working properly when compiled into a Web Component.
+
+Issue link: https://github.com/tailwindlabs/tailwindcss/issues/15005
 
 ## Testing
 
