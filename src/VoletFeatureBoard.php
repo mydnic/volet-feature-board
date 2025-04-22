@@ -31,6 +31,7 @@ class VoletFeatureBoard extends BaseFeature
     public function getScripts(): ?string
     {
         $scriptUrl = asset('vendor/volet-feature-board/volet-feature-board.js');
+
         return "<script src=\"{$scriptUrl}\"></script>";
     }
 
