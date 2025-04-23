@@ -19,12 +19,12 @@ class ModelWithAuthor
 
     public function isUserAuthor()
     {
-        return !str_starts_with($this->author_id, 'guest_');
+        return ! str_starts_with($this->author_id, 'guest_');
     }
 }
 
 test('can set author id for authenticated user', function () {
-    $model = new ModelWithAuthor();
+    $model = new ModelWithAuthor;
 
     Auth::shouldReceive('check')
         ->andReturn(true);
@@ -38,7 +38,7 @@ test('can set author id for authenticated user', function () {
 });
 
 test('can set author id for guest', function () {
-    $model = new ModelWithAuthor();
+    $model = new ModelWithAuthor;
 
     Auth::shouldReceive('check')
         ->andReturn(false);
@@ -49,7 +49,7 @@ test('can set author id for guest', function () {
 });
 
 test('can check if authored by specific author', function () {
-    $model = new ModelWithAuthor();
+    $model = new ModelWithAuthor;
     $model->author_id = 'guest_789';
 
     Auth::shouldReceive('check')
@@ -60,10 +60,11 @@ test('can check if authored by specific author', function () {
 });
 
 test('can get author name for user', function () {
-    $model = new ModelWithAuthor();
+    $model = new ModelWithAuthor;
     $model->author_id = 1;
 
-    $user = new class {
+    $user = new class
+    {
         public $name = 'John Doe';
     };
 
@@ -73,7 +74,7 @@ test('can get author name for user', function () {
 });
 
 test('can get author name for guest', function () {
-    $model = new ModelWithAuthor();
+    $model = new ModelWithAuthor;
     $model->author_id = 'guest_123';
 
     expect($model->getAuthorName())->toBe('Guest');

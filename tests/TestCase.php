@@ -29,7 +29,7 @@ class TestCase extends Orchestra
 
     protected function defineDatabaseMigrations()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 
     public function getEnvironmentSetUp($app)
@@ -43,7 +43,7 @@ class TestCase extends Orchestra
         ]);
 
         // Charger la configuration du package
-        $app['config']->set('volet-feature-board', require __DIR__ . '/../config/volet-feature-board.php');
+        $app['config']->set('volet-feature-board', require __DIR__.'/../config/volet-feature-board.php');
     }
 
     /**

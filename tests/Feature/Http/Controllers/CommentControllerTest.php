@@ -10,7 +10,7 @@ use Mydnic\VoletFeatureBoard\Models\Feature;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->controller = new CommentController();
+    $this->controller = new CommentController;
 
     // Create a test feature
     $this->feature = Feature::create([
@@ -69,7 +69,7 @@ test('store returns error when no author id is provided', function () {
 });
 
 test('store validates content is required', function () {
-    $request = new Request();
+    $request = new Request;
     $request->headers->set('X-Guest-ID', 'guest_456');
 
     $request->validate = function () {

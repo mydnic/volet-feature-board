@@ -2,7 +2,6 @@
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Mydnic\Volet\Features\FeatureManager;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Http\Controllers\FeatureController;
@@ -14,7 +13,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->featureManager = \Mockery::mock(FeatureManager::class);
-    $this->featureBoard = new VoletFeatureBoard();
+    $this->featureBoard = new VoletFeatureBoard;
 
     $this->featureManager->shouldReceive('getFeature')
         ->with('volet-feature-board')
@@ -23,7 +22,7 @@ beforeEach(function () {
     $this->controller = new FeatureController($this->featureManager);
 
     $this->featureBoard->addCategory('bug', 'Bug', 'bug-icon')
-                       ->addCategory('feature', 'Feature', 'feature-icon');
+        ->addCategory('feature', 'Feature', 'feature-icon');
 });
 
 test('index returns all features with vote information', function () {
@@ -50,7 +49,7 @@ test('index returns all features with vote information', function () {
         'author_id' => 'guest_123',
     ]);
 
-    $request = new Request();
+    $request = new Request;
     $request->headers->set('X-Guest-ID', 'guest_123');
 
     $response = $this->controller->index($request);
@@ -115,7 +114,7 @@ test('show returns a single feature with vote information', function () {
         'author_id' => 'guest_123',
     ]);
 
-    $request = new Request();
+    $request = new Request;
     $request->headers->set('X-Guest-ID', 'guest_123');
 
     $response = $this->controller->show($request, $feature);
