@@ -1,5 +1,5 @@
 <?php
 
-use Mydnic\VoletFeatureboard\Tests\TestCase;
+use Mydnic\VoletFeatureBoard\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
