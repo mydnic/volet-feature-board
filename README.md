@@ -15,6 +15,12 @@ You can install the package via composer:
 composer require mydnic/volet-feature-board
 ```
 
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="volet-feature-board-config"
+```
+
 You can publish and run the migrations with:
 
 ```bash
@@ -22,10 +28,10 @@ php artisan vendor:publish --tag="volet-feature-board-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Publish the assets with:
 
 ```bash
-php artisan vendor:publish --tag="volet-feature-board-config"
+php artisan vendor:publish --tag="volet-feature-board-assets" --force
 ```
 
 ## Usage
