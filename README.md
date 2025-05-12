@@ -7,6 +7,11 @@
 
 A Feature board plugin for [Volet](https://github.com/mydnic/volet) - Allow users to suggest and vote for features
 
+## Demo
+
+![Demo of Feature List](demo1.png)
+![Demo of Feature View](demo2.png)
+
 ## Installation
 
 You can install the package via composer:
