@@ -15,7 +15,7 @@ class VoletFeatureBoard extends BaseFeature
 
     public function getLabel(): string
     {
-        return 'Feature Requests';
+        return $this->label ?? 'Feature Requests';
     }
 
     public function getIcon(): string
