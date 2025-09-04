@@ -16,11 +16,6 @@ class ModelWithAuthor
     {
         $this->$relation = $value;
     }
-
-    public function isUserAuthor()
-    {
-        return ! str_starts_with($this->author_id, 'guest_');
-    }
 }
 
 test('can set author id for authenticated user', function () {

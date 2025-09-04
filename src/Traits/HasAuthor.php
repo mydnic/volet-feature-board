@@ -11,6 +11,11 @@ trait HasAuthor
         return $this->belongsTo(config('volet-feature-board.user_model'));
     }
 
+    public function isUserAuthor(): bool
+    {
+        return ! str_starts_with($this->author_id, 'guest_');
+    }
+
     public function setAuthorId($authorId)
     {
         // If it's a guest ID, store it as is
