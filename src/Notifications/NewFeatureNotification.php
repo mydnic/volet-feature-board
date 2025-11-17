@@ -8,9 +8,7 @@ use Mydnic\VoletFeatureBoard\Models\Feature;
 
 class NewFeatureNotification extends Notification
 {
-    public function __construct(public Feature $feature)
-    {
-    }
+    public function __construct(public Feature $feature) {}
 
     public function via($notifiable): array
     {
