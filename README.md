@@ -58,6 +58,14 @@ Register the plugin in VoletServiceProvider
  );
 ```
 
+### Notification
+
+You can choose to be notified when a new feature is submitted by setting the `mail_notification` config to true and adding the emails to notify in the `send_mails_to` array.
+
+This will trigger an email notification, so be sure to have a mail driver configured.
+
+If you wish to customize the notification, you can create your own notification class and trigger it via an observer.
+
 ### Issue with Tailwind
 
 This package was built with TailwindCSS, to demonstrate that it's possible to use any framework and have a final compiled javascript that can be used by Volet, even in an application that does not use TailwindCSS.
