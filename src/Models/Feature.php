@@ -5,6 +5,7 @@ namespace Mydnic\VoletFeatureBoard\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Notification;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Traits\HasAuthor;
 
@@ -27,6 +28,24 @@ class Feature extends Model
     protected $appends = [
         'author_name',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            // send notification if enabled
+            if (
+                config('volet-feature-board.mail_notification.enabled') &&
+                count(config('volet-feature-board.mail_notification.send_mails_to'))
+            ) {
+                $class = config('volet-feature-board.mail_notification.class');
+
+                Notification::route('mail', config('volet-feature-board.mail_notification.send_mails_to'))
+                    ->notify(new $class($model));
+            }
+        });
+    }
 
     public function getTable()
     {
