@@ -2,6 +2,30 @@
 
 All notable changes to `volet-feature-board` will be documented in this file.
 
+## v1.1.0 - 2025-11-17
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/9
+* Add out of the box notification when a new Feature is submitted by @mydnic in https://github.com/mydnic/volet-feature-board/pull/10
+
+### Upgrade
+
+Just add this to your config file :
+
+```php
+    'mail_notification' => [
+        'enabled' => true,
+        'send_mails_to' => [
+            // List of emails to send the notification to
+            // 'admin@example.com',
+        ],
+        'class' => \Mydnic\VoletFeatureBoard\Notifications\NewFeatureNotification::class,
+    ],
+
+```
+**Full Changelog**: https://github.com/mydnic/volet-feature-board/compare/v1.0.2...v1.1.0
+
 ## v1.0.2 - 2025-09-04
 
 ### What's Changed
