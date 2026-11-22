@@ -2,6 +2,18 @@
 
 All notable changes to `volet-feature-board` will be documented in this file.
 
+## v1.1.1 - 2026-11-22
+
+### What's Changed
+
+* Bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/11
+* Bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/12
+* Bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/13
+* Bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/14
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/mydnic/volet-feature-board/pull/15
+
+**Full Changelog**: https://github.com/mydnic/volet-feature-board/compare/v1.1.0...v1.1.1
+
 ## v1.1.0 - 2025-11-17
 
 ### What's Changed
@@ -22,6 +34,7 @@ Just add this to your config file :
         ],
         'class' => \Mydnic\VoletFeatureBoard\Notifications\NewFeatureNotification::class,
     ],
+
 
 ```
 **Full Changelog**: https://github.com/mydnic/volet-feature-board/compare/v1.0.2...v1.1.0
