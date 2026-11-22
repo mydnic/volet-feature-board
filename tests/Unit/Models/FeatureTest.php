@@ -1,15 +1,18 @@
 <?php
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
+use Mydnic\VoletFeatureBoard\Models\Comment;
 use Mydnic\VoletFeatureBoard\Models\Feature;
+use Mydnic\VoletFeatureBoard\Models\Vote;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     config()->set('volet-feature-board.tables.features', 'volet_features');
-    config()->set('volet-feature-board.models.vote', \Mydnic\VoletFeatureBoard\Models\Vote::class);
-    config()->set('volet-feature-board.models.comment', \Mydnic\VoletFeatureBoard\Models\Comment::class);
+    config()->set('volet-feature-board.models.vote', Vote::class);
+    config()->set('volet-feature-board.models.comment', Comment::class);
 });
 
 test('feature uses the correct table name', function () {
@@ -43,13 +46,13 @@ test('feature status is cast to enum', function () {
 test('feature has votes relationship', function () {
     $feature = new Feature;
 
-    expect($feature->votes())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($feature->votes())->toBeInstanceOf(HasMany::class);
 });
 
 test('feature has comments relationship', function () {
     $feature = new Feature;
 
-    expect($feature->comments())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($feature->comments())->toBeInstanceOf(HasMany::class);
 });
 
 test('feature can get author name for regular user', function () {

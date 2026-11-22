@@ -12,7 +12,7 @@ use Mydnic\VoletFeatureBoard\VoletFeatureBoard;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->featureManager = \Mockery::mock(FeatureManager::class);
+    $this->featureManager = Mockery::mock(FeatureManager::class);
     $this->featureBoard = new VoletFeatureBoard;
 
     $this->featureManager->shouldReceive('getFeature')

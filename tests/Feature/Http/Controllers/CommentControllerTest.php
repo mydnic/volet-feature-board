@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Mydnic\VoletFeatureBoard\Enums\FeatureStatus;
 use Mydnic\VoletFeatureBoard\Http\Controllers\CommentController;
 use Mydnic\VoletFeatureBoard\Models\Feature;
@@ -73,7 +74,7 @@ test('store validates content is required', function () {
     $request->headers->set('X-Guest-ID', 'guest_456');
 
     $request->validate = function () {
-        throw new \Illuminate\Validation\ValidationException(
+        throw new ValidationException(
             Validator::make([], ['content' => 'required']),
             response()->json(['errors' => ['content' => ['The content field is required.']]], 422)
         );
@@ -82,7 +83,7 @@ test('store validates content is required', function () {
     try {
         $this->controller->store($request, $this->feature);
         $this->fail('Expected ValidationException was not thrown');
-    } catch (\Illuminate\Validation\ValidationException $e) {
+    } catch (ValidationException $e) {
         expect($e->status)->toBe(422);
         expect($e->errors())->toHaveKey('content');
     }

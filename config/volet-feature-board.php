@@ -1,5 +1,13 @@
 <?php
 
+use Mydnic\VoletFeatureBoard\Http\Controllers\CommentController;
+use Mydnic\VoletFeatureBoard\Http\Controllers\FeatureController;
+use Mydnic\VoletFeatureBoard\Http\Controllers\VoteController;
+use Mydnic\VoletFeatureBoard\Models\Comment;
+use Mydnic\VoletFeatureBoard\Models\Feature;
+use Mydnic\VoletFeatureBoard\Models\Vote;
+use Mydnic\VoletFeatureBoard\Notifications\NewFeatureNotification;
+
 return [
     'tables' => [
         'features' => 'volet_features',
@@ -9,16 +17,16 @@ return [
 
     // The controller class to use for feedback endpoints
     'controllers' => [
-        'features' => \Mydnic\VoletFeatureBoard\Http\Controllers\FeatureController::class,
-        'votes' => \Mydnic\VoletFeatureBoard\Http\Controllers\VoteController::class,
-        'comments' => \Mydnic\VoletFeatureBoard\Http\Controllers\CommentController::class,
+        'features' => FeatureController::class,
+        'votes' => VoteController::class,
+        'comments' => CommentController::class,
     ],
 
     // The model class to use for feedback messages
     'models' => [
-        'feature' => \Mydnic\VoletFeatureBoard\Models\Feature::class,
-        'vote' => \Mydnic\VoletFeatureBoard\Models\Vote::class,
-        'comment' => \Mydnic\VoletFeatureBoard\Models\Comment::class,
+        'feature' => Feature::class,
+        'vote' => Vote::class,
+        'comment' => Comment::class,
     ],
 
     'routes' => [
@@ -48,6 +56,6 @@ return [
             // List of emails to send the notification to
             // 'admin@example.com',
         ],
-        'class' => \Mydnic\VoletFeatureBoard\Notifications\NewFeatureNotification::class,
+        'class' => NewFeatureNotification::class,
     ],
 ];

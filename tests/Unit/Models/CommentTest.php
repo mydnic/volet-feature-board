@@ -1,13 +1,15 @@
 <?php
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mydnic\VoletFeatureBoard\Models\Comment;
+use Mydnic\VoletFeatureBoard\Models\Feature;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     config()->set('volet-feature-board.tables.comments', 'volet_feature_comments');
-    config()->set('volet-feature-board.models.feature', \Mydnic\VoletFeatureBoard\Models\Feature::class);
+    config()->set('volet-feature-board.models.feature', Feature::class);
 });
 
 test('comment uses the correct table name', function () {
@@ -31,7 +33,7 @@ test('comment has fillable attributes', function () {
 test('comment has feature relationship', function () {
     $comment = new Comment;
 
-    expect($comment->feature())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class);
+    expect($comment->feature())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('comment can get author name for regular user', function () {

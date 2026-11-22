@@ -1,13 +1,15 @@
 <?php
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mydnic\VoletFeatureBoard\Models\Feature;
 use Mydnic\VoletFeatureBoard\Models\Vote;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     config()->set('volet-feature-board.tables.votes', 'volet_feature_user_votes');
-    config()->set('volet-feature-board.models.feature', \Mydnic\VoletFeatureBoard\Models\Feature::class);
+    config()->set('volet-feature-board.models.feature', Feature::class);
 });
 
 test('vote uses the correct table name', function () {
@@ -30,7 +32,7 @@ test('vote has fillable attributes', function () {
 test('vote has feature relationship', function () {
     $vote = new Vote;
 
-    expect($vote->feature())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class);
+    expect($vote->feature())->toBeInstanceOf(BelongsTo::class);
 });
 
 test('vote can get author name for regular user', function () {
