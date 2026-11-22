@@ -23,12 +23,12 @@
                 {
                     'name': 'Idea',
                     'slug': 'idea',
-                    'icon': 'https://api.iconify.design/lucide:lightbulb.svg?color=%23888888'
+                    'icon': 'https://api.iconify.design/lucide/lightbulb.svg?color=%23888888'
                 },
                 {
                     'name': 'Issue',
                     'slug': 'issue',
-                    'icon': 'https://api.iconify.design/lucide:trash.svg?color=%23888888'
+                    'icon': 'https://api.iconify.design/lucide/trash.svg?color=%23888888'
                 }
             ]"
             :routes="{

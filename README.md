@@ -48,12 +48,12 @@ Register the plugin in VoletServiceProvider
          ->addCategory(
              slug: 'idea',
              name: 'Idea',
-             icon: 'https://api.iconify.design/lucide:lightbulb.svg?color=%23888888'
+             icon: 'https://api.iconify.design/lucide/lightbulb.svg?color=%23888888'
          )
          ->addCategory(
              slug: 'issue',
              name: 'Issue',
-             icon: 'https://api.iconify.design/lucide:wrench.svg?color=%23888888'
+             icon: 'https://api.iconify.design/lucide/wrench.svg?color=%23888888'
          )
  );
 ```

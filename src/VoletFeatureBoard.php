@@ -20,7 +20,7 @@ class VoletFeatureBoard extends BaseFeature
 
     public function getIcon(): string
     {
-        return 'https://api.iconify.design/lucide:lightbulb.svg?color=%23888888';
+        return 'https://api.iconify.design/lucide/lightbulb.svg?color=%23888888';
     }
 
     public function getComponentName(): ?string

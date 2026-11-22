@@ -10,7 +10,7 @@
                 type="button"
                 aria-haspopup="dialog"
             >
-                <img src="https://api.iconify.design/lucide:x.svg?color=%2371717b" alt="add feature" class="size-4 mr-2">
+                <img src="https://api.iconify.design/lucide/x.svg?color=%2371717b" alt="add feature" class="size-4 mr-2">
                 {{ labels.cancel }}
             </button>
         </div>

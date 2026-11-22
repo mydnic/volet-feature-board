@@ -11,7 +11,7 @@
                 type="button"
                 aria-haspopup="dialog"
             >
-                <img src="https://api.iconify.design/lucide:plus.svg?color=%23FFF" alt="add feature"
+                <img src="https://api.iconify.design/lucide/plus.svg?color=%23FFF" alt="add feature"
                      class="size-4 mr-2">
                 {{ labels.addFeatureButton }}
             </button>
@@ -37,7 +37,7 @@
                         feature.has_voted ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
                     ]"
                 >
-                    <img :src="`https://api.iconify.design/lucide:thumbs-up.svg?color=%23${feature.has_voted ? 'FFF' : '2563eb'}`" alt="like"
+                    <img :src="`https://api.iconify.design/lucide/thumbs-up.svg?color=%23${feature.has_voted ? 'FFF' : '2563eb'}`" alt="like"
                          class="size-4 mr-2">
                     <span class="text-sm">{{ feature.votes_count }}</span>
                 </div>

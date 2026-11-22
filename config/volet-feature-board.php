@@ -35,7 +35,7 @@ return [
     ],
 
     'content' => [
-        'success-icon' => 'https://api.iconify.design/heroicons:check-circle.svg?color=%2322c55e',
+        'success-icon' => 'https://api.iconify.design/heroicons/check-circle.svg?color=%2322c55e',
     ],
 
     // Send a notification to the site's admin when a new feature is submitted

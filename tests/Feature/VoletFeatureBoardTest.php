@@ -17,7 +17,7 @@ test('feature board has correct label', function () {
 test('feature board has correct icon', function () {
     $featureBoard = new VoletFeatureBoard;
 
-    expect($featureBoard->getIcon())->toBe('https://api.iconify.design/lucide:lightbulb.svg?color=%23888888');
+    expect($featureBoard->getIcon())->toBe('https://api.iconify.design/lucide/lightbulb.svg?color=%23888888');
 });
 
 test('feature board has correct component name', function () {
